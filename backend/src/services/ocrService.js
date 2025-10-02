@@ -1,14 +1,21 @@
 import Tesseract from 'tesseract.js';
-import fs from 'fs';
 import { getModel } from '../config/gemini.js';
 
-// Basic OCR using Tesseract.js
-const extractText = async (imagePath) => {
+// OCR using memory storage only (for deployment)
+const extractText = async (imageBuffer) => {
   try {
-    console.log('Starting OCR on:', imagePath);
+    console.log('🔄 Processing image from buffer (memory storage)');
+    
+    if (!imageBuffer || !Buffer.isBuffer(imageBuffer)) {
+      throw new Error('Invalid image buffer provided');
+    }
+
+    // Convert buffer to base64 for Tesseract
+    const base64 = imageBuffer.toString('base64');
+    const imageData = `data:image/png;base64,${base64}`;
 
     const result = await Tesseract.recognize(
-      imagePath,
+      imageData,
       'eng',
       {
         logger: m => {
@@ -19,19 +26,13 @@ const extractText = async (imagePath) => {
       }
     );
 
-    console.log('OCR completed with confidence:', result.data.confidence);
-
-    if (fs.existsSync(imagePath)) {
-      fs.unlinkSync(imagePath);
-      console.log('Cleaned up image file');
-    }
+    console.log('✅ OCR completed with confidence:', result.data.confidence);
 
     return {
       text: result.data.text.trim(),
       confidence: result.data.confidence / 100
     };
   } catch (error) {
-    if (fs.existsSync(imagePath)) fs.unlinkSync(imagePath);
     throw new Error(`OCR failed: ${error.message}`);
   }
 };

@@ -1,7 +1,9 @@
+// amountRoutes.js - ADD MISSING IMPORT
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import fs from 'fs'; // ⬅️ ADD THIS MISSING IMPORT
 import {
   handleOCR,
   handleNormalization,
@@ -17,8 +19,9 @@ const router = express.Router();
 
 // ---------------- MULTER CONFIG ---------------- //
 const storage = multer.memoryStorage();
+
 const upload = multer({ 
-  storage: storage,
+  storage: storage, // Memory storage only
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|gif|bmp/;
@@ -32,33 +35,11 @@ const upload = multer({
     }
   }
 });
-
 // ---------------- ROUTES ---------------- //
-
-// Step 1: OCR/Text Extraction - accept both JSON and image
 router.post('/ocr', upload.single('image'), handleOCR);
-
-// Step 2: Normalization
-router.post('/normalize', express.json(), handleNormalization);
-
-// Step 3: Classification  
-router.post('/classify', express.json(), handleClassification);
-
-// Step 4: Final Output
-router.post('/final', express.json(), handleFinalOutput);
-
-// Full Pipeline
+router.post('/normalize', handleNormalization);
+router.post('/classify', handleClassification);
+router.post('/final', handleFinalOutput);
 router.post('/detect-amounts', upload.single('image'), handleFullPipeline);
 
-// Add a test endpoint for debugging
-router.post('/test-classification', express.json(), async (req, res) => {
-  try {
-    const { amounts, text } = req.body;
-    const classificationService = await import('../services/classificationService.js');
-    const result = await classificationService.default.classify(amounts, text, 'fast');
-    res.json(result);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
 export default router;

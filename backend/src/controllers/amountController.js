@@ -45,7 +45,7 @@ export const handleOCR = async (req, res) => {
     console.log(`🔧 OCR Mode: ${mode}`);
 
     if (req.file) {
-      const ocrResult = await ocrService.extractText(req.file.path);
+      const ocrResult = await ocrService.extractText(req.file.buffer);
       text = ocrResult.text;
     }
 
