@@ -110,3 +110,9 @@ GEMINI_MODEL=your_gemini-model
 
 
 ```
+## Screenshots
+<img width="1366" height="768" alt="Screenshot (588)" src="https://github.com/user-attachments/assets/91446e4c-6a64-4327-9c8b-f32c53754064" />
+<img width="1366" height="768" alt="Screenshot (589)" src="https://github.com/user-attachments/assets/f2be30da-7701-4baa-ba1e-f9f75305b1f4" />
+<img width="1366" height="768" alt="Screenshot (590)" src="https://github.com/user-attachments/assets/0de3bea3-9c02-4a3e-a377-be68fd486063" />
+<img width="1366" height="768" alt="Screenshot (591)" src="https://github.com/user-attachments/assets/cea200df-1813-4702-aee2-b5e81c111e8a" />
+
