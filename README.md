@@ -4,6 +4,11 @@ An intelligent system that automatically extracts and classifies monetary amount
 
 ## Live Demo: https://ai-powered-amount-detection-in-medical-zj7o.onrender.com/
 
+## Problem Statement:
+
+Design a service that extracts financial amounts from medical bills or receipts (typed or scanned, possibly crumpled or partially visible). Interns must handle OCR errors, digit corrections, classification by context, and produce final structured JSON with provenance.
+
+
 ## 🚀 Overview
 
 This project provides a sophisticated pipeline for detecting and categorizing financial amounts in medical documents. It combines traditional OCR with AI-powered classification to accurately identify different types of medical expenses like consultation fees, medicine costs, lab tests, and procedure charges.
