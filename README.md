@@ -17,7 +17,7 @@ This project provides a sophisticated pipeline for detecting and categorizing fi
 
 ### Key Features
 
-- **Multi-format Support**: Process both text input and image uploads (JPEG, PNG, BMP)
+- **Multi-format Support**: Process both text/json input and image uploads (JPEG, PNG, BMP)
 - **Dual Processing Modes**: Choose between fast rule-based processing or AI-enhanced analysis
 - **Smart Classification**: Automatically categorizes amounts into medical expense types
 - **Currency Detection**: Supports multiple currencies (INR, USD, EUR, GBP)
@@ -56,6 +56,14 @@ cp .env.example .env
 npm run dev
 
 ```
+## Environment Variables
+
+Create a .env file in the backend directory:
+```bash
+PORT=3000
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=your_gemini-model
+```
 ### Frontend Setup
 ```bash
 cd frontend
@@ -63,11 +71,11 @@ npm install
 npm run dev
 ```
 
-## 🚀 Usage
+##  Usage
 
-Fast Mode 🚀 - Rule-based processing for quick results
+- **Fast Mode 🚀** :  Rule-based processing for quick results
 
-AI Enhanced Mode 🤖 - Gemini AI-powered analysis for higher accuracy
+- **AI Enhanced Mode 🤖** :  Gemini AI-powered analysis for higher accuracy
 
 
 ## 🏗️ Project Structure
@@ -97,17 +105,8 @@ AI-Powered-Amount-Detection/
 └── README.md
 ```
 
-
-## Environment Variables
-
-Create a .env file in the backend directory:
-```bash
-PORT=3000
-GEMINI_API_KEY=your_gemini_api_key_here
-GEMINI_MODEL=your_gemini-model
-```
 ## API Endpoints 
-test-cases.js contains exact Text/Json inputs for each Endpoints and their desired Responses
+**test-cases.js contains exact Text/Json inputs for each Endpoints and their desired Responses**
 
 ```bash
 | Endpoint              | Method | Description                      | Input              |
@@ -137,6 +136,8 @@ Fast mode Complete pipeline processing- https://ai-powered-amount-detection-in-m
 Ai Enhanced Complete pipeline processing- https://ai-powered-amount-detection-in-medical.onrender.com/api/detect-amounts?mode=aiEnhanced
 
 ```
+## Storage
+Currently, images are processed in-memory for simplicity. In a production-ready setup, I would extend this to use either diskStorage (local uploads folder) or a cloud provider like Cloudinary/S3 for persistence and scalability.
 ## Screenshots
 <img width="1366" height="768" alt="Screenshot (588)" src="https://github.com/user-attachments/assets/91446e4c-6a64-4327-9c8b-f32c53754064" />
 <img width="1366" height="768" alt="Screenshot (589)" src="https://github.com/user-attachments/assets/f2be30da-7701-4baa-ba1e-f9f75305b1f4" />
