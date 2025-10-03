@@ -104,7 +104,7 @@ PORT=3000
 GEMINI_API_KEY=your_gemini_api_key_here
 GEMINI_MODEL=your_gemini-model
 ```
-## API Endpoints
+## API Endpoints (for details see test-cases.js)
 
 ```bash
 | Endpoint              | Method | Description                      | Input              |
@@ -115,6 +115,23 @@ GEMINI_MODEL=your_gemini-model
 | `/api/final`          | POST   | Generate final structured output | Classified amounts |
 | `/api/detect-amounts` | POST   | Complete pipeline processing     | Image file or text |
 
+Header:
+for test/json- Content-Type:application/json
+for image- Content-Type:mutipart/form-data
+
+Fast mode OCR/TEXT Extraction- https://ai-powered-amount-detection-in-medical.onrender.com/api/ocr?mode=fast
+Ai Enhanced mode OCR/TEXT Extraction- https://ai-powered-amount-detection-in-medical.onrender.com/api/ocr?mode=aiEnhanced
+
+Fast mode Normalization- https://ai-powered-amount-detection-in-medical.onrender.com/api/normalize?mode=fast
+Ai Enhanced Normalization- https://ai-powered-amount-detection-in-medical.onrender.com/api/normalize?mode=aiEnhanced
+
+Fast mode Classification by Context- https://ai-powered-amount-detection-in-medical.onrender.com/api/classify?mode=fast
+Ai Enhanced Classification by Context- https://ai-powered-amount-detection-in-medical.onrender.com/api/classify?mode=aiEnhanced
+
+Final Output- https://ai-powered-amount-detection-in-medical.onrender.com/api/final
+
+Fast mode Complete pipeline processing- https://ai-powered-amount-detection-in-medical.onrender.com/api/detect-amounts?mode=fast
+Ai Enhanced Complete pipeline processing- https://ai-powered-amount-detection-in-medical.onrender.com/api/detect-amounts?mode=aiEnhanced
 
 ```
 ## Screenshots
