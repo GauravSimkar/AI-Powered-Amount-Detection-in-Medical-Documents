@@ -1,10 +1,10 @@
 import Tesseract from 'tesseract.js';
 import { getModel } from '../config/gemini.js';
 
-// OCR using memory storage only (for deployment)
+// Extract text from image buffer using Tesseract
 const extractText = async (imageBuffer) => {
   try {
-    console.log('🔄 Processing image from buffer (memory storage)');
+    console.log(' Processing image from buffer (memory storage)');
     
     if (!imageBuffer || !Buffer.isBuffer(imageBuffer)) {
       throw new Error('Invalid image buffer provided');
@@ -26,7 +26,7 @@ const extractText = async (imageBuffer) => {
       }
     );
 
-    console.log('✅ OCR completed with confidence:', result.data.confidence);
+    console.log('OCR completed with confidence:', result.data.confidence);
 
     return {
       text: result.data.text.trim(),
@@ -37,13 +37,11 @@ const extractText = async (imageBuffer) => {
   }
 };
 
-// Improved amount extraction with better filtering
 const extractAmountsWithRegex = async (text) => {
   try {
     console.log('Extracting amounts using improved regex');
     console.log('OCR Text:', text);
     
-    // Improved regex to capture monetary amounts
     const numericRegex = /\b\d{1,3}(?:,\d{3})*(?:\.\d{2})?\b|\b\d+\.\d{2}\b|\b\d+\b/g;
     const allMatches = text.match(numericRegex) || [];
     
@@ -53,7 +51,6 @@ const extractAmountsWithRegex = async (text) => {
     const filteredMatches = allMatches.filter(token => {
       const num = parseFloat(token.replace(/,/g, ''));
       
-      // Filter out dates (years like 2018, 2023, etc.)
       if (num >= 1900 && num <= 2100) {
         console.log('Filtered out date:', token);
         return false;
@@ -82,7 +79,7 @@ const extractAmountsWithRegex = async (text) => {
 
     console.log('Filtered monetary amounts:', filteredMatches);
 
-    let currency_hint = 'USD'; // Default for bike shop
+    let currency_hint = 'INR';
     if (text.match(/INR|Rs\.?|₹|Rupees?/i)) currency_hint = 'INR';
     else if (text.match(/USD|\$|Dollars?/i)) currency_hint = 'USD';
     else if (text.match(/EUR|€|Euros?/i)) currency_hint = 'EUR';
@@ -105,7 +102,7 @@ const extractAmountsWithRegex = async (text) => {
   }
 };
 
-// AI-enhanced amount extraction with better filtering
+
 const extractAmountsWithAI = async (text) => {
   try {
     console.log('Extracting amounts using AI');
@@ -157,7 +154,7 @@ Return ONLY JSON, no markdown.
       const aiData = JSON.parse(jsonMatch[0]);
       aiData.method = 'ai';
       aiData.note = 'AI-filtered monetary amounts';
-      console.log('✅ AI-enhanced extraction successful');
+      console.log(' AI-enhanced extraction successful');
       return aiData;
     } else {
       throw new Error('No valid JSON found in AI response');
@@ -178,7 +175,7 @@ const extractAmounts = async (text, mode = 'fast') => {
       try {
         return await extractAmountsWithAI(text);
       } catch (aiError) {
-        console.log('⚠️ AI extraction failed, falling back to regex');
+        console.log(' AI extraction failed, falling back to regex');
         return await extractAmountsWithRegex(text);
       }
     } else {

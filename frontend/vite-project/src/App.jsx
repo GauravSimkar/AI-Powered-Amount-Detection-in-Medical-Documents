@@ -52,7 +52,7 @@ export default function App() {
         case "/ocr":
           const ocrUrl = `${BACKEND_URL}/ocr?mode=${pipelineMode}`;
 
-          // ✅ TEXT MODE: Keep existing code
+          // TEXT MODE
           if (mode === "text") {
             result = await apiCall(ocrUrl, {
               method: "POST",
@@ -60,14 +60,13 @@ export default function App() {
               body: JSON.stringify({ text }),
             });
           }
-          // ✅ IMAGE MODE: Fix - remove headers for FormData
+          // IMAGE MODE: NO headers for FormData - browser sets it automatically
           else {
             const formData = new FormData();
             formData.append("image", file);
 
             result = await apiCall(ocrUrl, {
               method: "POST",
-              // ⚠️ NO headers for FormData - browser sets it automatically
               body: formData,
             });
           }
@@ -78,7 +77,6 @@ export default function App() {
           const ocrUrlForNorm = `${BACKEND_URL}/ocr?mode=${pipelineMode}`;
           let ocrData;
 
-          // ✅ TEXT MODE: Keep existing code
           if (mode === "text") {
             ocrData = await apiCall(ocrUrlForNorm, {
               method: "POST",
@@ -86,14 +84,12 @@ export default function App() {
               body: JSON.stringify({ text }),
             });
           }
-          // ✅ IMAGE MODE: Fix - remove headers for FormData
           else {
             const formData = new FormData();
             formData.append("image", file);
 
             ocrData = await apiCall(ocrUrlForNorm, {
               method: "POST",
-              // ⚠️ NO headers for FormData
               body: formData,
             });
           }
@@ -111,11 +107,10 @@ export default function App() {
           break;
 
         case "/classify":
-          // For classification, we need OCR → Normalize first
+          // For classification, we need OCR -> Normalize first
           const ocrUrlForClass = `${BACKEND_URL}/ocr?mode=${pipelineMode}`;
           let ocrDataForClass;
 
-          // ✅ TEXT MODE: Keep existing code
           if (mode === "text") {
             ocrDataForClass = await apiCall(ocrUrlForClass, {
               method: "POST",
@@ -123,14 +118,12 @@ export default function App() {
               body: JSON.stringify({ text }),
             });
           }
-          // ✅ IMAGE MODE: Fix - remove headers for FormData
           else {
             const formData = new FormData();
             formData.append("image", file);
 
             ocrDataForClass = await apiCall(ocrUrlForClass, {
               method: "POST",
-              // ⚠️ NO headers for FormData
               body: formData,
             });
           }
@@ -168,11 +161,10 @@ export default function App() {
           break;
 
         case "/final":
-          // For final, we need the complete pipeline: OCR → Normalize → Classify
+          // For final, we need the complete pipeline: OCR -> Normalize -> Classify
           const ocrUrlForFinal = `${BACKEND_URL}/ocr?mode=${pipelineMode}`;
           let ocrDataForFinal;
 
-          // ✅ TEXT MODE: Keep existing code
           if (mode === "text") {
             ocrDataForFinal = await apiCall(ocrUrlForFinal, {
               method: "POST",
@@ -180,14 +172,12 @@ export default function App() {
               body: JSON.stringify({ text }),
             });
           }
-          // ✅ IMAGE MODE: Fix - remove headers for FormData
           else {
             const formData = new FormData();
             formData.append("image", file);
 
             ocrDataForFinal = await apiCall(ocrUrlForFinal, {
               method: "POST",
-              // ⚠️ NO headers for FormData
               body: formData,
             });
           }
@@ -266,7 +256,6 @@ export default function App() {
       if (mode === "image" && !file)
         return setResponse("❌ Please select a file.");
 
-      // ✅ TEXT MODE: Keep your existing working code
       if (mode === "text") {
         const res = await fetch(
           `${BACKEND_URL}/detect-amounts?mode=${pipelineMode}`,
@@ -280,7 +269,7 @@ export default function App() {
         const data = await res.json();
         setResponse(JSON.stringify(data, null, 2));
       }
-      // ✅ IMAGE MODE: Fix only image upload
+
       else {
         const formData = new FormData();
         formData.append("image", file);
@@ -289,7 +278,6 @@ export default function App() {
           `${BACKEND_URL}/detect-amounts?mode=${pipelineMode}`,
           {
             method: "POST",
-            // ⚠️ NO headers for FormData
             body: formData,
           }
         );
@@ -311,7 +299,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex flex-col items-center justify-center p-4 sm:p-8 relative overflow-hidden">
-      {/* Animated Background */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-indigo-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse delay-1000"></div>

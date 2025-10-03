@@ -39,10 +39,10 @@ Return JSON:
 // ----------- Step 1: OCR -----------
 export const handleOCR = async (req, res) => {
   try {
-    const mode = req.query.mode || 'fast'; // 'fast' or 'aiEnhanced'
+    const mode = req.query.mode || 'fast';
     let text = req.body.text;
 
-    console.log(`🔧 OCR Mode: ${mode}`);
+    console.log(` OCR Mode: ${mode}`);
 
     if (req.file) {
       const ocrResult = await ocrService.extractText(req.file.buffer);
@@ -70,7 +70,7 @@ export const handleNormalization = async (req, res) => {
     const mode = req.query.mode || 'fast';
     const { tokens } = req.body;
     
-    console.log(`🔧 Normalization Mode: ${mode}`);
+    console.log(` Normalization Mode: ${mode}`);
     
     if (!tokens || tokens.length === 0) return res.status(400).json({ error: 'No tokens provided' });
 
@@ -91,8 +91,8 @@ export const handleClassification = async (req, res) => {
     const mode = req.query.mode || 'fast';
     const { normalizedAmounts, text, rawTokens } = req.body; // Add rawTokens
     
-    console.log(`🔧 Classification Mode: ${mode}`);
-    console.log('📊 Input for classification:', { 
+    console.log(` Classification Mode: ${mode}`);
+    console.log(' Input for classification:', { 
       normalizedAmounts, 
       textLength: text?.length,
       rawTokensCount: rawTokens?.length 
@@ -113,7 +113,6 @@ export const handleClassification = async (req, res) => {
       });
     }
 
-    // Pass additional context to classification service
     const classified = await classificationService.classify(
       normalizedAmounts, 
       text, 
@@ -121,7 +120,7 @@ export const handleClassification = async (req, res) => {
       rawTokens // Pass raw tokens for better context
     );
     
-    console.log('🎯 Classification result:', classified);
+    console.log(' Classification result:', classified);
     
     return res.json({
       ...classified,
@@ -148,7 +147,7 @@ export const handleFinalOutput = async (req, res) => {
     const final = await finalService.createFinal(amounts, currency || 'INR');
     return res.json({
       ...final,
-      mode_used: 'final' // Final step doesn't have different modes
+      mode_used: 'final' 
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -162,12 +161,12 @@ export const handleFullPipeline = async (req, res) => {
     let text = req.body.text;
     let ocrData;
 
-    console.log(`🚀 Full Pipeline Mode: ${mode}`);
+    console.log(` Full Pipeline Mode: ${mode}`);
 
     // Handle file upload
     if (req.file) {
-      console.log('📁 Processing uploaded file...');
-      const ocrResult = await ocrService.extractTextFromBuffer(req.file.buffer); // Use buffer instead of file path
+      console.log(' Processing uploaded file...');
+      const ocrResult = await ocrService.extractTextFromBuffer(req.file.buffer);
       text = ocrResult.text;
     }
 
@@ -179,11 +178,11 @@ export const handleFullPipeline = async (req, res) => {
       });
     }
 
-    console.log('📝 Text for processing:', text.substring(0, 200) + '...');
+    console.log(' Text for processing:', text.substring(0, 200) + '...');
 
     // OCR + Amount extraction
     ocrData = await ocrService.extractAmounts(text, mode);
-    console.log('🔍 OCR Results:', {
+    console.log(' OCR Results:', {
       tokensFound: ocrData.raw_tokens?.length,
       tokens: ocrData.raw_tokens
     });
@@ -217,12 +216,12 @@ export const handleFullPipeline = async (req, res) => {
     // Classification - PASS THE RAW TEXT AND TOKENS
     const classified = await classificationService.classify(
       normalized.normalized_amounts, 
-      text, // Pass original text
+      text, 
       mode,
-      ocrData.raw_tokens // Pass raw tokens for context
+      ocrData.raw_tokens 
     );
     
-    console.log('🏷️ Classification Results:', {
+    console.log(' Classification Results:', {
       inputAmounts: normalized.normalized_amounts.length,
       outputClassifications: classified.amounts?.length,
       classifications: classified.amounts
@@ -231,7 +230,7 @@ export const handleFullPipeline = async (req, res) => {
     // AI Validation (only in aiEnhanced mode)
     let validation = { valid: true, confidence: 0.85 };
     if (mode === 'aiEnhanced') {
-      console.log('🤖 Running AI validation...');
+      console.log(' Running AI validation...');
       validation = await validateWithAI(ocrData, normalized, classified, text);
     }
 

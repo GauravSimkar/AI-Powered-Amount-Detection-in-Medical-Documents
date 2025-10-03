@@ -8,8 +8,6 @@ export default defineConfig({
     port: 5173, // your frontend port
     allowedHosts: [
       'localhost',
-      '.ngrok-free.app',
-      '.ngrok-free.dev'
     ],
   },
 });

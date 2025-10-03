@@ -1,14 +1,7 @@
-// classificationService.js - COMPLETELY REVISED VERSION
 import { getModel } from '../config/gemini.js';
 
-// classificationService.js - FINAL FIXED VERSION
-// classificationService.js - FIXED VERSION WITH EXACT MATCHING
 const classifyWithRules = async (normalizedAmounts, rawText) => {
   try {
-    console.log('=== CLASSIFICATION DEBUG ===');
-    console.log('Input text:', rawText);
-    console.log('Amounts to classify:', normalizedAmounts);
-
     const segments = rawText.toLowerCase().split(/[,.\n]/).map(s => s.trim()).filter(s => s.length > 0);
     console.log('Segments found:', segments);
 
@@ -23,7 +16,7 @@ const classifyWithRules = async (normalizedAmounts, rawText) => {
       const amountPatterns = [
         amountValue.toString(),
         amountValue.toFixed(2),
-        ` ${amountValue} `, // Add spaces for exact matching
+        ` ${amountValue} `,
         `:${amountValue}`,
         `${amountValue},`,
         `${amountValue}.`
@@ -34,7 +27,6 @@ const classifyWithRules = async (normalizedAmounts, rawText) => {
       // Try each pattern to find the segment containing this amount
       for (const pattern of amountPatterns) {
         foundSegment = segments.find(seg => {
-          // Use exact matching to avoid substring issues
           return seg.includes(` ${pattern} `) || 
                  seg.includes(`:${pattern}`) ||
                  seg.includes(` ${pattern},`) ||
@@ -43,19 +35,19 @@ const classifyWithRules = async (normalizedAmounts, rawText) => {
                  seg === pattern;
         });
         if (foundSegment) {
-          console.log(`🔍 Found ${amountValue} (as "${pattern}") in segment: "${foundSegment}"`);
+          console.log(` Found ${amountValue} (as "${pattern}") in segment: "${foundSegment}"`);
           break;
         }
       }
       
-      // FALLBACK: If not found with exact patterns, try simple includes but verify it's not a substring
+      // FALLBACK: If not found with exact patterns, try simple includes
       if (!foundSegment) {
         for (const segment of segments) {
           // Use regex to match whole words or numbers with boundaries
           const regex = new RegExp(`\\b${amountValue}\\b`);
           if (regex.test(segment)) {
             foundSegment = segment;
-            console.log(`🔍 Found ${amountValue} (using regex) in segment: "${foundSegment}"`);
+            console.log(` Found ${amountValue} (using regex) in segment: "${foundSegment}"`);
             break;
           }
         }
@@ -67,34 +59,27 @@ const classifyWithRules = async (normalizedAmounts, rawText) => {
       if (foundSegment) {
         if (foundSegment.includes('consultation') || foundSegment.includes('consult')) {
           type = 'consultation_fee';
-          console.log(`✅ ${amountValue} → consultation_fee (found "consultation" in segment)`);
         } else if (foundSegment.includes('medicine') || foundSegment.includes('drug')) {
           type = 'medicine';
-          console.log(`✅ ${amountValue} → medicine (found "medicine" in segment)`);
         } else if (foundSegment.includes('test') || foundSegment.includes('lab')) {
           type = 'test';
-          console.log(`✅ ${amountValue} → test (found "test" in segment)`);
         } else if (foundSegment.includes('total') || foundSegment.includes('bill')) {
           type = 'total_bill';
-          console.log(`✅ ${amountValue} → total_bill (found "total" in segment)`);
         } else if (foundSegment.includes('paid') || foundSegment.includes('payment')) {
           type = 'paid';
-          console.log(`✅ ${amountValue} → paid (found "paid" in segment)`);
         } else if (foundSegment.includes('balance') || foundSegment.includes('due') || foundSegment.includes('payable')) {
           type = 'due';
-          console.log(`✅ ${amountValue} → due (found "balance/due" in segment)`);
         } else if (foundSegment.includes('discount') || foundSegment.includes('off')) {
           type = 'discount';
-          console.log(`✅ ${amountValue} → discount (found "discount" in segment)`);
         } else {
-          console.log(`❓ ${amountValue} → other (no matching keyword in segment)`);
+          console.log(` ${amountValue} -> other (no matching keyword in segment)`);
         }
         
         confidence = 0.9;
       } else {
-        console.log(`❌ Amount ${amountValue} not found in any segment, using fallback`);
+        console.log(` Amount ${amountValue} not found in any segment, using fallback`);
         
-        // Enhanced fallback logic
+        //fallback logic
         const sorted = [...normalizedAmounts].sort((a, b) => b - a);
         const isLargest = amountValue === sorted[0];
         const isSmallest = amountValue === sorted[sorted.length - 1];
@@ -102,16 +87,12 @@ const classifyWithRules = async (normalizedAmounts, rawText) => {
         
         if (isLargest) {
           type = 'total_bill';
-          console.log(`🤔 ${amountValue} → total_bill (largest amount fallback)`);
         } else if (isSecondLargest) {
           type = 'paid';
-          console.log(`🤔 ${amountValue} → paid (second largest fallback)`);
         } else if (isSmallest) {
           type = 'due';
-          console.log(`🤔 ${amountValue} → due (smallest amount fallback)`);
         } else {
           type = 'other';
-          console.log(`🤔 ${amountValue} → other (middle amount fallback)`);
         }
         confidence = 0.5;
       }
@@ -133,7 +114,7 @@ const classifyWithRules = async (normalizedAmounts, rawText) => {
   }
 };
 
-// Enhanced AI classification
+
 const classifyWithAI = async (normalizedAmounts, rawText) => {
   try {
     console.log('Classifying amounts using AI');
@@ -152,9 +133,7 @@ const classifyWithAI = async (normalizedAmounts, rawText) => {
     }
 
     const model = getModel();
-    
-    // ENHANCED PROMPT for better medical classification
-    const prompt = `
+        const prompt = `
 You are a medical billing expert. Analyze this medical bill text and classify each amount by its type.
 
 MEDICAL BILL TEXT:
@@ -237,7 +216,7 @@ IMPORTANT:
     parsed.method = 'ai';
     parsed.note = 'Classified using enhanced AI medical analysis';
     
-    console.log('✅ Enhanced AI classification successful:', parsed.amounts);
+    console.log(' Enhanced AI classification successful:', parsed.amounts);
     return parsed;
 
   } catch (error) {
@@ -265,14 +244,14 @@ const classify = async (normalizedAmounts, rawText, mode = 'fast') => {
     
     if (mode === 'aiEnhanced' && process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'your_gemini_api_key_here') {
       try {
-        console.log('🤖 Attempting AI classification...');
+        console.log(' Attempting AI classification...');
         result = await classifyWithAI(normalizedAmounts, rawText);
       } catch (aiError) {
-        console.log('⚠️ AI classification failed, falling back to rule-based:', aiError.message);
+        console.log(' AI classification failed, falling back to rule-based:', aiError.message);
         result = await classifyWithRules(normalizedAmounts, rawText);
       }
     } else {
-      console.log('⚡ Using rule-based classification');
+      console.log(' Using rule-based classification');
       result = await classifyWithRules(normalizedAmounts, rawText);
     }
 
@@ -281,7 +260,7 @@ const classify = async (normalizedAmounts, rawText, mode = 'fast') => {
       throw new Error('Classification returned invalid amounts array');
     }
 
-    console.log('🎯 Final classification types:', 
+    console.log(' Final classification types:', 
       result.amounts.map(a => `${a.type}: ${a.value}`)
     );
 

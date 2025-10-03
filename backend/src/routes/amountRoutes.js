@@ -1,9 +1,5 @@
-// amountRoutes.js - ADD MISSING IMPORT
 import express from 'express';
 import multer from 'multer';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import fs from 'fs'; // ⬅️ ADD THIS MISSING IMPORT
 import {
   handleOCR,
   handleNormalization,
@@ -12,16 +8,13 @@ import {
   handleFullPipeline
 } from '../controllers/amountController.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 const router = express.Router();
 
 // ---------------- MULTER CONFIG ---------------- //
 const storage = multer.memoryStorage();
 
 const upload = multer({ 
-  storage: storage, // Memory storage only
+  storage: storage,
   limits: { fileSize: 5 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|gif|bmp/;

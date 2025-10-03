@@ -43,13 +43,12 @@ export const EnhancedResponseViewer = ({ response }) => {
     URL.revokeObjectURL(url);
   };
 
-  // Simple JSON formatter without dangerous HTML
   const renderJSON = (obj) => {
     const jsonString = formatJSON(obj);
     return (
       <div className="whitespace-pre font-mono text-sm">
         {jsonString.split('\n').map((line, index) => (
-          <div key={`line-${index}`} className="flex hover:bg-gray-800/50 transition-colors"> {/* FIXED: Unique key */}
+          <div key={`line-${index}`} className="flex hover:bg-gray-800/50 transition-colors"> 
             <span className="text-gray-500 select-none mr-4 w-8 text-right">{index + 1}</span>
             <span className="flex-1 text-gray-300">
               {line}

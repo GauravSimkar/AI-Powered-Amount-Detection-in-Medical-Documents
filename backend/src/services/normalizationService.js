@@ -1,11 +1,9 @@
 import { getModel } from '../config/gemini.js';
 
-// Enhanced regex normalization for medical amounts
 const normalizeWithRegex = async (rawTokens) => {
   try {
     console.log('Normalizing medical tokens using enhanced regex', rawTokens);
 
-    // Medical-specific normalization
     const normalizedAmounts = [];
     let processedCount = 0;
 
@@ -14,11 +12,8 @@ const normalizeWithRegex = async (rawTokens) => {
       if (token.includes('%') || token.trim() === '') {
         continue;
       }
-      
-      // Enhanced cleaning for medical amounts
       const cleaned = token.replace(/,/g, '').replace(/[^\d.]/g, '');
       
-      // Handle empty results after cleaning
       if (!cleaned || cleaned === '.') {
         continue;
       }
@@ -27,7 +22,6 @@ const normalizeWithRegex = async (rawTokens) => {
       
       // Medical amount validation with reasonable ranges
       if (!isNaN(number) && number > 0) {
-        // Medical bills typically range from small medicine costs to large procedures
         if (number >= 0.01 && number < 1000000) { // Reasonable medical range
           normalizedAmounts.push(parseFloat(number.toFixed(2))); // Standardize decimals
           processedCount++;
@@ -58,7 +52,6 @@ const normalizeWithRegex = async (rawTokens) => {
   }
 };
 
-// Enhanced AI normalization with medical validation
 const normalizeWithAI = async (rawTokens) => {
   try {
     console.log('Normalizing medical amounts using enhanced AI validation', rawTokens);
@@ -76,7 +69,6 @@ const normalizeWithAI = async (rawTokens) => {
       };
     }
 
-    // First, do basic medical normalization
     const normalizedAmounts = [];
     for (const token of rawTokens) {
       if (token.includes('%')) continue;
@@ -90,9 +82,7 @@ const normalizeWithAI = async (rawTokens) => {
     const uniqueAmounts = [...new Set(normalizedAmounts)].sort((a, b) => b - a);
 
     const model = getModel();
-    
-    // Enhanced medical validation prompt
-    const prompt = `You are a medical billing validation expert. Analyze these amounts from a healthcare document:
+        const prompt = `You are a medical billing validation expert. Analyze these amounts from a healthcare document:
 
 RAW MEDICAL TOKENS: ${JSON.stringify(rawTokens)}
 NORMALIZED AMOUNTS: ${JSON.stringify(uniqueAmounts)}
@@ -134,7 +124,7 @@ Return ONLY JSON.`;
     if (jsonMatch) {
       const parsed = JSON.parse(jsonMatch[0]);
       parsed.method = 'ai';
-      console.log('✅ Enhanced medical AI validation successful:', parsed.validation_notes);
+      console.log('Enhanced medical AI validation successful:', parsed.validation_notes);
       return parsed;
     } else {
       throw new Error('No valid JSON found in AI response');
@@ -155,7 +145,7 @@ const normalize = async (rawTokens, mode = 'fast') => {
       try {
         return await normalizeWithAI(rawTokens);
       } catch (aiError) {
-        console.log('⚠️ Medical AI normalization failed, using regex fallback');
+        console.log(' Medical AI normalization failed, using regex fallback');
         return await normalizeWithRegex(rawTokens);
       }
     } else {
