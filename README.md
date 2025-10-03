@@ -116,8 +116,8 @@ GEMINI_MODEL=your_gemini-model
 | `/api/detect-amounts` | POST   | Complete pipeline processing     | Image file or text |
 
 Header:
-for test/json- Content-Type:application/json
-for image- Content-Type:mutipart/form-data
+for text/json-> Content-Type:application/json
+for image-> Content-Type:mutipart/form-data
 
 Fast mode OCR/TEXT Extraction- https://ai-powered-amount-detection-in-medical.onrender.com/api/ocr?mode=fast
 Ai Enhanced mode OCR/TEXT Extraction- https://ai-powered-amount-detection-in-medical.onrender.com/api/ocr?mode=aiEnhanced
