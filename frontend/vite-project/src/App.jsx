@@ -11,7 +11,7 @@ export default function App() {
   const [endpoint, setEndpoint] = useState("");
   const [response, setResponse] = useState("");
 
-  const BACKEND_URL = "http://localhost:3000/api";
+  const BACKEND_URL = "https://ai-powered-amount-detection-in-medical.onrender.com/api";
 
   const handleStepSubmit = async () => {
     if (!endpoint) {

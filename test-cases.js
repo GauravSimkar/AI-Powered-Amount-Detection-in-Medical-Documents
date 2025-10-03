@@ -1,6 +1,6 @@
 /*
 
-Base URL: http://localhost:3000/api
+Base URL: https://ai-powered-amount-detection-in-medical.onrender.com/api
 
 🧪 Test Case 1: OCR Endpoint
 
