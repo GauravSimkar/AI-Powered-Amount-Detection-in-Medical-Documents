@@ -2,6 +2,15 @@
 
 Base URL: https://ai-powered-amount-detection-in-medical.onrender.com/api
 
+My Api looks like: for OCR/Text Extraction
+using Fast mode- https://ai-powered-amount-detection-in-medical.onrender.com/api/ocr?mode=fast
+using Ai Enhanced mode- https://ai-powered-amount-detection-in-medical.onrender.com/api/ocr?mode=aiEnhanced
+
+The above structure will follow in all the below mentioned endpoints 
+
+
+
+
 🧪 Test Case 1: OCR Endpoint
 
 Method	POST
@@ -28,7 +37,7 @@ Expected Response (200 OK)
 
 
 
-Test Case : Normalize Endpoint 
+🧪 Test Case 2: Normalize Endpoint 
 
 Method	POST
 Endpoint	/normalize?mode=fast   /normalize?mode=aiEnhanced
@@ -87,7 +96,7 @@ Expected Response (200 OK)
 
 
 
-Test Case 4: Final Endpoint
+🧪 Test Case 4: Final Endpoint
 
 Method	POST
 Endpoint	/final
@@ -189,7 +198,8 @@ Method	POST
 Content-Type	multipart/form-data
 
 Request Body (Form Data)
-Key	              Value	                      Type          
+
+Key	              Value	                          Type          
 image	      [Select medical bill image]	      File
 
 
