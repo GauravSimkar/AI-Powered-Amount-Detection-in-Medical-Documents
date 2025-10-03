@@ -106,7 +106,8 @@ PORT=3000
 GEMINI_API_KEY=your_gemini_api_key_here
 GEMINI_MODEL=your_gemini-model
 ```
-## API Endpoints (for details see test-cases.js)
+## API Endpoints 
+test-cases.js contains exact Text/Json inputs for each Endpoints and their desired Responses
 
 ```bash
 | Endpoint              | Method | Description                      | Input              |
